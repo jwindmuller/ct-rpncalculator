@@ -7,32 +7,57 @@
 //
 
 #import "CalculatorViewController.h"
+#import "CalculatorBrain.h"
 
 @interface CalculatorViewController ()
-
+@property BOOL userIsInTheMiddleOfInsertingANumber;
+@property (nonatomic, strong) CalculatorBrain *brain;
 @end
 
 @implementation CalculatorViewController
 
-- (void)viewDidLoad
+@synthesize display;
+@synthesize userIsInTheMiddleOfInsertingANumber;
+@synthesize brain = _brain;
+
+- (CalculatorBrain *) brain
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    if (!_brain) _brain = [[CalculatorBrain alloc] init];
+    return _brain;
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+- (IBAction)digitPressed:(UIButton *)sender {
+    NSString *digit = [sender currentTitle];
+    if ([digit isEqualToString:@"."]) {
+        if ([self.display.text rangeOfString:@"."].length != NSNotFound) {
+            digit = self.userIsInTheMiddleOfInsertingANumber ? @"" : @"0.";
+        }
+    }
+    if ([digit isEqualToString:@"π"]) {
+        digit = @"3.14159";
+        self.display.text = @"";
+    }
+    if (self.userIsInTheMiddleOfInsertingANumber) {
+        self.display.text = [self.display.text stringByAppendingString:digit];
     } else {
-        return YES;
+        self.display.text = digit;
+        self.userIsInTheMiddleOfInsertingANumber = YES;
     }
 }
+- (IBAction)enterPressed {
+    [self.brain pushOperand:[self.display.text doubleValue]];
+    self.userIsInTheMiddleOfInsertingANumber = NO;
+}
+- (IBAction)operationPressed:(UIButton *)sender {
+    if (self.userIsInTheMiddleOfInsertingANumber) {
+        [self enterPressed];
+    }
+    NSString *operation = [sender currentTitle];
+    double result = [self.brain performOperation:operation];
+    self.display.text = [NSString stringWithFormat:@"%g", result];
+}
 
+- (void)viewDidUnload {
+    [super viewDidUnload];
+}
 @end

@@ -1,5 +1,5 @@
 //
-//  CalculatorViewController.h
+//  CalculatorBrain.h
 //  Calculator
 //
 //  Created by Joaquin Windmuller on 12-06-28.
@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CalculatorViewController : UIViewController
+@interface CalculatorBrain : NSObject
 
-@property (weak, nonatomic) IBOutlet UILabel *display;
-
+- (void) pushOperand:(double)operand;
+- (double) performOperation:(NSString *)operation;
 @end
