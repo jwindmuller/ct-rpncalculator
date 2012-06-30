@@ -34,6 +34,13 @@
     return _commandsReceived;
 }
 
+- (IBAction)clearPressed:(UIButton *)sender
+{
+    [self.brain amnesia];
+    self.commandsReceived = nil;
+    self.display.text = @"0";
+    self.stackDisplay.text = @"";
+}
 - (IBAction)digitPressed:(UIButton *)sender {
     NSString *digit = [sender currentTitle];
     if ([digit isEqualToString:@"."]) {

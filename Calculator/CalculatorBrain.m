@@ -67,7 +67,10 @@
     [self pushOperand:result];
     return result;
 }
-
+- (void) amnesia
+{
+    self.operandStack = nil;
+}
 + (double) degreeToRad:(double)radians
 {
     return  M_PI/180 * radians;
