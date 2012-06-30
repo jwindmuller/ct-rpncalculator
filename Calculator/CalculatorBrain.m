@@ -39,23 +39,37 @@
     double result = 0;
     if ([operation isEqualToString:@"+"]) {
         result = [self popOperand] + [self popOperand];
+        
     } else if ([operation isEqualToString:@"*"]) {
         result = [self popOperand] * [self popOperand];
+        
     } else if ([operation isEqualToString:@"-"]) {
         double substrahend = [self popOperand];
         result = [self popOperand] - substrahend;
+        
     } else if ([operation isEqualToString:@"/"]) {
         double divisor = [self popOperand];
         if (divisor) result = [self popOperand] / divisor;
+        
     } else if ([operation isEqualToString:@"sqrt"]) {
         double subject = [self popOperand];
         if (subject > 0) result = sqrt(subject);
+        
     } else if ([operation isEqualToString:@"sin"]) {
-        result = sin([self popOperand]);
+        double divisor = [self popOperand];
+        if (divisor) result = sin([CalculatorBrain degreeToRad:divisor]);
+        
     } else if ([operation isEqualToString:@"cos"]) {
-        result = cos([self popOperand]);
+        double divisor = [self popOperand];
+        if (divisor) result = cos([CalculatorBrain degreeToRad:divisor]);;
+        
     }
     [self pushOperand:result];
     return result;
+}
+
++ (double) degreeToRad:(double)radians
+{
+    return  M_PI/180 * radians;
 }
 @end
